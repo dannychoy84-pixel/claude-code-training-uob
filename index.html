@@ -922,6 +922,97 @@
     .whatsapp-fab { right: 16px; bottom: 16px; }
     .whatsapp-panel { right: 16px; left: 16px; width: auto; bottom: 84px; }
   }
+
+  /* ============================================================
+     EVENT ANNOUNCEMENT MODAL — Christmas celebration RSVP
+     Fires client-side after ~10s on the page (see script below).
+     Implemented here, not as a .claude hook — see .claude/hooks/README.md.
+  ============================================================ */
+  .event-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(4, 4, 6, 0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .event-modal-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .event-modal {
+    width: min(440px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    background: var(--color-elevated);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hover);
+    padding: 28px;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.2s ease;
+  }
+  .event-modal-backdrop.open .event-modal { transform: scale(1) translateY(0); }
+
+  .event-modal-eyebrow {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    background: rgba(62,156,255,0.08);
+    border: 1px solid rgba(62,156,255,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 0.9em;
+  }
+  .event-modal h2 {
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    margin-bottom: 0.4em;
+  }
+  .event-modal-details {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5em;
+  }
+  .event-modal-details strong { color: var(--color-text); }
+
+  .event-rsvp-form .form-field { margin-bottom: 14px; }
+  .event-rsvp-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .event-rsvp-actions .btn { flex: 1 1 140px; }
+
+  .event-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+  }
+  .event-modal-close:hover { color: var(--color-text); background: var(--color-elevated-2); }
+  .event-modal { position: relative; }
+
+  .event-rsvp-confirm {
+    text-align: center;
+    padding: 12px 0;
+  }
+  .event-rsvp-confirm p:first-child {
+    color: var(--color-success);
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
 </style>
 </head>
 <body>
@@ -1293,6 +1384,60 @@
   </div>
 </div>
 
+<!-- ============================================================
+     EVENT ANNOUNCEMENT MODAL — Christmas celebration RSVP
+     See .claude/hooks/README.md for why this lives here and not
+     as a .claude/hooks file.
+============================================================ -->
+<div class="event-modal-backdrop" id="eventModalBackdrop">
+  <div class="event-modal" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle" id="eventModal">
+    <button type="button" class="event-modal-close" id="eventModalClose" aria-label="Close announcement">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+
+    <span class="event-modal-eyebrow">// COMPANY_ANNOUNCEMENT</span>
+    <h2 id="eventModalTitle">Christmas Celebration</h2>
+    <p class="event-modal-details">Join us at the <strong>Hilton Hotel</strong>, <strong id="eventModalDate">8pm, Wednesday</strong>. Let us know if you're coming and we'll save you a seat.</p>
+
+    <form class="event-rsvp-form" id="eventRsvpForm" novalidate>
+      <div class="form-field">
+        <label for="eventName">Name <span class="required-mark" aria-hidden="true">*</span></label>
+        <input type="text" id="eventName" name="eventName" required autocomplete="name">
+        <span class="field-error" id="eventNameError" role="alert"></span>
+      </div>
+      <div class="form-field">
+        <label for="eventEmail">Email <span class="required-mark" aria-hidden="true">*</span></label>
+        <input type="email" id="eventEmail" name="eventEmail" required autocomplete="email">
+        <span class="field-error" id="eventEmailError" role="alert"></span>
+      </div>
+      <div class="form-field">
+        <label for="eventDepartment">Department <span class="required-mark" aria-hidden="true">*</span></label>
+        <select id="eventDepartment" name="eventDepartment" required>
+          <option value="">Select department…</option>
+          <option>Retail Banking</option>
+          <option>Corporate Banking</option>
+          <option>Treasury</option>
+          <option>Risk &amp; Compliance</option>
+          <option>Operations</option>
+          <option>Human Resources</option>
+          <option>Technology</option>
+        </select>
+        <span class="field-error" id="eventDepartmentError" role="alert"></span>
+      </div>
+
+      <div class="event-rsvp-actions">
+        <button type="submit" class="btn btn-primary">Count me in</button>
+        <button type="button" class="btn btn-secondary" id="eventDismissBtn">Not this time</button>
+      </div>
+    </form>
+
+    <div class="event-rsvp-confirm" id="eventRsvpConfirm" hidden tabindex="-1">
+      <p>You're on the list!</p>
+      <p class="hero-sub" style="margin-bottom:0;">Thanks — we've noted you're coming. See you there.</p>
+    </div>
+  </div>
+</div>
+
 <script>
   /* ============================================================
      MOBILE NAV TOGGLE
@@ -1648,6 +1793,95 @@
     });
 
     closeBtn.addEventListener('click', closePanel);
+  })();
+
+  /* ============================================================
+     EVENT ANNOUNCEMENT MODAL — 10s dwell-time popup, in-memory only
+     (see .claude/hooks/README.md for why this isn't a hook file)
+  ============================================================ */
+  (function () {
+    var backdrop = document.getElementById('eventModalBackdrop');
+    var modal = document.getElementById('eventModal');
+    var closeBtn = document.getElementById('eventModalClose');
+    var dismissBtn = document.getElementById('eventDismissBtn');
+    var form = document.getElementById('eventRsvpForm');
+    var confirmPanel = document.getElementById('eventRsvpConfirm');
+    var dateEl = document.getElementById('eventModalDate');
+    var lastFocused = null;
+
+    var eventRsvps = []; // in-memory only — no localStorage/sessionStorage/network calls
+
+    function formatNextWednesday() {
+      var now = new Date();
+      var day = now.getDay(); // 0=Sun ... 3=Wed ... 6=Sat
+      var daysUntil = (3 - day + 7) % 7;
+      if (daysUntil === 0) daysUntil = 7; // "next Wednesday" means the coming one, not today
+      var next = new Date(now);
+      next.setDate(now.getDate() + daysUntil);
+      var opts = { weekday: 'long', day: 'numeric', month: 'long' };
+      return '8:00 PM, ' + next.toLocaleDateString('en-SG', opts);
+    }
+
+    function openModal() {
+      dateEl.textContent = formatNextWednesday();
+      lastFocused = document.activeElement;
+      backdrop.hidden = false;
+      requestAnimationFrame(function () { backdrop.classList.add('open'); });
+      document.getElementById('eventName').focus();
+      document.addEventListener('keydown', onKeydown);
+    }
+
+    function closeModal() {
+      backdrop.classList.remove('open');
+      document.removeEventListener('keydown', onKeydown);
+      window.setTimeout(function () { backdrop.hidden = true; }, 200);
+      if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    }
+
+    function onKeydown(e) {
+      if (e.key === 'Escape') closeModal();
+    }
+
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) closeModal();
+    });
+    closeBtn.addEventListener('click', closeModal);
+    dismissBtn.addEventListener('click', closeModal);
+
+    function setEventError(id, message) {
+      var el = document.getElementById(id + 'Error');
+      if (el) el.textContent = message || '';
+      var input = document.getElementById(id);
+      if (input) input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('eventName').value.trim();
+      var email = document.getElementById('eventEmail').value.trim();
+      var department = document.getElementById('eventDepartment').value;
+      var valid = true;
+
+      if (!name) { setEventError('eventName', 'Please enter your name.'); valid = false; }
+      else setEventError('eventName', '');
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setEventError('eventEmail', 'Please enter a valid email address.'); valid = false; }
+      else setEventError('eventEmail', '');
+
+      if (!department) { setEventError('eventDepartment', 'Please select a department.'); valid = false; }
+      else setEventError('eventDepartment', '');
+
+      if (!valid) return;
+
+      eventRsvps.push({ name: name, email: email, department: department, submittedAt: new Date().toISOString() });
+
+      form.hidden = true;
+      confirmPanel.hidden = false;
+      confirmPanel.focus();
+    });
+
+    // Fire once, ~10s after page load
+    window.setTimeout(openModal, 10000);
   })();
 </script>
 </body>

@@ -21,6 +21,8 @@ A dark, terminal-inspired "systems console" look: near-black background, the ori
 - An IT support ticket form with full client-side validation (required fields, Staff ID pattern, corporate email domain check, live character counters, and a warning if the description looks like it contains a password/OTP/credential)
 - Mock ticket generation (`UOB-ITSD-YYYYMMDD-####`) with a priority-based SLA response, all handled in memory — no storage, no network calls
 - A searchable FAQ accordion covering 8 common IT support questions
+- A floating WhatsApp widget (bottom-right) with suggested quick questions that open a pre-filled WhatsApp chat
+- A one-time announcement dialog after ~10 seconds on the page (in-memory RSVP only, no storage/network calls)
 
 ## Running it
 
@@ -37,6 +39,8 @@ CLAUDE.md    — guidance for Claude Code when working in this repo
 
 - **MCP**: Playwright, registered at the project level in [`.mcp.json`](.mcp.json) for browser automation and screenshots.
 - **Command**: [`/github-publish`](.claude/commands/github-publish.md) — security-scans, then publishes the site (README, screenshot, GitHub Pages, repo About).
+- **Agents**: [`ticket-form-tester`](.claude/agents/ticket-form-tester.md) — end-to-end tests the ticket form and logs runs to `ticket-submissions-log.json`. [`cyber-risk-scanner`](.claude/agents/cyber-risk-scanner.md) — scans the repo for risk and logs runs to `cyber-health-log.csv`. Both draft (never auto-send) notification emails, reading the recipient from a gitignored `.claude/notify-config.json` — create that file locally with `{"notificationEmail": "you@example.com"}` before running either.
+- **Hooks**: see [`.claude/hooks/README.md`](.claude/hooks/README.md) for why the dwell-time announcement popup is implemented in `index.html` rather than as a Claude Code hook.
 - **Skills** (installed via [`npx skills`](https://skills.sh), not committed — see below to reinstall):
   - [`frontend-design`](https://github.com/anthropics/skills)
   - [`ui-ux-pro-max`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
