@@ -1,0 +1,10 @@
+# Training brief contains personal contact details (phone/email) — keep local only
+Training prompt.txt
+
+# Local machine-specific Claude Code settings
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
