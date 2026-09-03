@@ -10,6 +10,10 @@ https://dannychoy84-pixel.github.io/claude-code-training-uob/
 
 ![Screenshot of the UOB IT Service Desk homepage](docs/screenshot.png)
 
+## Design
+
+A dark, terminal-inspired "systems console" look: near-black background, the original UOB gold kept as the primary accent for brand continuity, a circuit-blue secondary accent, JetBrains Mono for headings/status labels, and IBM Plex Sans for body copy. The hero headline types itself out like a boot sequence, with an ambient drifting glow and a pulsing "all systems operational" status line — all motion respects `prefers-reduced-motion`.
+
 ## Features
 
 - Sticky navigation with a responsive hamburger menu on mobile
