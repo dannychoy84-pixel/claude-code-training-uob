@@ -1,5 +1,5 @@
 ---
-description: Security-scan, then publish this project to GitHub with a README, About section, and GitHub Pages site
+description: Security-scan, then publish this project to GitHub with a README (incl. screenshot), About section, and GitHub Pages site
 argument-hint: [github-repo-url-or-name]
 ---
 
@@ -34,41 +34,52 @@ Use `git diff --cached` / `git status` plus a `Grep` pass over the working tree 
 
 Report a one-line scan summary to the user either way ("Security scan: clean, N files checked" or what was excluded and why).
 
-## 3. Create or update the README
+## 3. Capture a screenshot
+
+Capture a fresh screenshot of the site so the README always reflects the current design:
+
+- Prefer the Playwright MCP tool if it's available in this session (`browser_navigate` to the local file, then `browser_take_screenshot` / `browser_resize` for a consistent viewport).
+- Otherwise fall back to the Playwright CLI, which needs no MCP approval step:
+  `npx playwright screenshot --viewport-size=1280,900 index.html docs/screenshot.png`
+  (use the live Pages URL instead of the local file once one exists, so the screenshot reflects what's actually deployed).
+- Save it to `docs/screenshot.png`, overwriting the previous one.
+- Confirm the file was written and looks correct (check its dimensions/size aren't 0) before using it in the README.
+
+## 4. Create or update the README
 
 Write/update `README.md` at the project root covering:
 
 - What the project is (one or two sentences)
 - The training-demo disclaimer (not affiliated with UOB)
+- The live-site link (fill in the real URL if Pages is already deployed from a previous run; otherwise leave the step-6 placeholder)
+- The screenshot from step 3, embedded via `![Screenshot of the site](docs/screenshot.png)`, placed near the top so it's the first thing a visitor sees
 - Key features (ticket form, FAQ, etc.)
 - How to run it locally (open `index.html` directly — no build step)
 - Project structure (brief)
-- A live-site link section — leave a placeholder here for now; it gets filled in once Pages is live (step 5)
-- A screenshot of the live site (`docs/screenshot.png`), captured with Playwright and embedded via `![...](docs/screenshot.png)`
 
 Keep it concise. Don't fabricate features that don't exist in the code.
 
-## 4. Commit and push
+## 5. Commit and push
 
-- Stage the relevant files (never `git add -A` blindly — review what's staged).
+- Stage the relevant files (never `git add -A` blindly — review what's staged), including `docs/screenshot.png`.
 - Write a commit message describing what changed and why.
 - Push to `origin` on the current branch, creating the branch upstream if needed.
 - If the repo doesn't exist yet on GitHub, create it with `gh repo create <name> --public --source=. --remote=origin --push` (ask the user for public/private if not already established).
 
-## 5. GitHub Pages via GitHub Actions
+## 6. GitHub Pages via GitHub Actions
 
-- Create `.github/workflows/pages.yml` that deploys the static site (root directory) to GitHub Pages using the standard `actions/configure-pages`, `actions/upload-pages-artifact`, and `actions/deploy-pages` actions, triggered on push to the default branch.
+- Create `.github/workflows/pages.yml` (if it doesn't already exist) that deploys the static site (root directory) to GitHub Pages using the standard `actions/configure-pages`, `actions/upload-pages-artifact`, and `actions/deploy-pages` actions, triggered on push to the default branch.
 - Enable Pages with the Actions build type: `gh api -X PUT repos/{owner}/{repo}/pages -f build_type=workflow` (create it first with POST if it doesn't exist, e.g. `gh api -X POST repos/{owner}/{repo}/pages -f build_type=workflow -f 'source[branch]=main' -f 'source[path]=/'` — adjust for the actual default branch name).
 - Push the workflow file so it runs, then poll `gh run list` / `gh api repos/{owner}/{repo}/pages` until the site is built, and derive the live URL (`https://<owner>.github.io/<repo>/`).
-- Update the README placeholder from step 3 with the real live URL once confirmed.
+- If the README's live-site placeholder from step 4 wasn't filled in yet, update it now with the real URL, commit, and push again.
 
-## 6. Repo About section
+## 7. Repo About section
 
 - Set the repository description and the website field to the live Pages URL:
   `gh repo edit <owner>/<repo> --description "<short description>" --homepage "https://<owner>.github.io/<repo>/"`
 - Add relevant topics if helpful (e.g. `claude-code`, `training-demo`), but don't over-tag.
 
-## 7. Final report
+## 8. Final report
 
 Tell the user, concisely:
 - What was scanned and whether anything was excluded
