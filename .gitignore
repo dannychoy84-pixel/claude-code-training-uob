@@ -8,3 +8,8 @@ Training prompt.txt
 # OS/editor cruft
 .DS_Store
 Thumbs.db
+
+# Installed Claude Code skills — reproducible via the commands in README.md,
+# not committed (large third-party data files + Windows-only symlinks)
+.agents/skills/
+.claude/skills/
