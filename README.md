@@ -8,6 +8,8 @@ A single self-contained mockup of an internal IT Support Service Desk site, buil
 
 https://dannychoy84-pixel.github.io/claude-code-training-uob/
 
+![Screenshot of the UOB IT Service Desk homepage](docs/screenshot.png)
+
 ## Features
 
 - Sticky navigation with a responsive hamburger menu on mobile

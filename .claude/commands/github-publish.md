@@ -44,6 +44,7 @@ Write/update `README.md` at the project root covering:
 - How to run it locally (open `index.html` directly — no build step)
 - Project structure (brief)
 - A live-site link section — leave a placeholder here for now; it gets filled in once Pages is live (step 5)
+- A screenshot of the live site (`docs/screenshot.png`), captured with Playwright and embedded via `![...](docs/screenshot.png)`
 
 Keep it concise. Don't fabricate features that don't exist in the code.
 
