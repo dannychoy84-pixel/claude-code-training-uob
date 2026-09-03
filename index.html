@@ -767,6 +767,161 @@
     .hero-actions { flex-direction: column; }
     .hero-actions .btn { width: 100%; }
   }
+
+  /* ============================================================
+     FLOATING WHATSAPP WIDGET
+  ============================================================ */
+  .whatsapp-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 200;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #25D366;
+    border: 2px solid #1FAF56;
+    color: #08150C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-hover);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .whatsapp-fab:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 0 0 1px #1FAF56, 0 0 28px rgba(37,211,102,0.45); }
+  .whatsapp-fab svg { width: 28px; height: 28px; }
+  .whatsapp-fab-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(37,211,102,0.55);
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .whatsapp-fab-ring { animation: wa-pulse-ring 2.4s ease-out infinite; }
+  }
+  @keyframes wa-pulse-ring {
+    0%   { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(1.55); opacity: 0; }
+  }
+
+  .whatsapp-panel {
+    position: fixed;
+    right: 24px;
+    bottom: 92px;
+    z-index: 200;
+    width: min(320px, calc(100vw - 48px));
+    max-height: min(440px, calc(100vh - 140px));
+    display: flex;
+    flex-direction: column;
+    background: var(--color-elevated);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hover);
+    overflow: hidden;
+    transform-origin: bottom right;
+    transform: scale(0.92) translateY(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+  }
+  .whatsapp-panel.open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .whatsapp-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, #0F2A1A 0%, var(--color-elevated) 100%);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .whatsapp-panel-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #25D366;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .whatsapp-panel-avatar svg { width: 20px; height: 20px; }
+  .whatsapp-panel-title { font-family: var(--font-mono); font-size: 0.95rem; color: var(--color-text); font-weight: 600; }
+  .whatsapp-panel-status { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--color-text-muted); margin-top: 2px; }
+  .whatsapp-panel-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    line-height: 0;
+  }
+  .whatsapp-panel-close:hover { color: var(--color-text); background: var(--color-elevated-2); }
+
+  .whatsapp-panel-body {
+    padding: 16px 18px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .whatsapp-panel-intro {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    margin-bottom: 14px;
+  }
+  .whatsapp-quick-replies {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .whatsapp-chip {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--color-text);
+    background: var(--color-elevated-2);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .whatsapp-chip:hover { border-color: var(--color-accent); background: rgba(232,163,61,0.06); }
+
+  .whatsapp-panel-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: #08150C;
+    background: #25D366;
+    border: none;
+    border-radius: var(--radius);
+    padding: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .whatsapp-panel-cta:hover { background: #1FAF56; box-shadow: 0 0 20px rgba(37,211,102,0.35); }
+  .whatsapp-panel-cta svg { width: 18px; height: 18px; }
+
+  @media (max-width: 480px) {
+    .whatsapp-fab { right: 16px; bottom: 16px; }
+    .whatsapp-panel { right: 16px; left: 16px; width: auto; bottom: 84px; }
+  }
 </style>
 </head>
 <body>
@@ -1100,6 +1255,44 @@
   </div>
 </footer>
 
+<!-- ============================================================
+     FLOATING WHATSAPP WIDGET
+============================================================ -->
+<div class="whatsapp-widget">
+  <button type="button" class="whatsapp-fab" id="waFabToggle" aria-haspopup="dialog" aria-expanded="false" aria-controls="waPanel" aria-label="Chat with IT Service Desk on WhatsApp">
+    <span class="whatsapp-fab-ring" aria-hidden="true"></span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C7.03 3 3 6.58 3 11c0 2.39 1.19 4.53 3.08 6.02L5 21l4.28-1.6A10.6 10.6 0 0 0 12 19c4.97 0 9-3.58 9-8s-4.03-8-9-8Z" fill="#08150C"/></svg>
+  </button>
+
+  <div class="whatsapp-panel" id="waPanel" role="dialog" aria-modal="false" aria-labelledby="waPanelTitle" hidden>
+    <div class="whatsapp-panel-header">
+      <div class="whatsapp-panel-avatar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C7.03 3 3 6.58 3 11c0 2.39 1.19 4.53 3.08 6.02L5 21l4.28-1.6A10.6 10.6 0 0 0 12 19c4.97 0 9-3.58 9-8s-4.03-8-9-8Z" fill="#08150C"/></svg>
+      </div>
+      <div>
+        <div class="whatsapp-panel-title" id="waPanelTitle">IT Service Desk</div>
+        <div class="whatsapp-panel-status"><span class="status-dot" aria-hidden="true"></span> Typically replies in minutes</div>
+      </div>
+      <button type="button" class="whatsapp-panel-close" id="waPanelClose" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="whatsapp-panel-body">
+      <p class="whatsapp-panel-intro">Chat with us on WhatsApp — tap a quick question below, or start your own message.</p>
+      <div class="whatsapp-quick-replies">
+        <a class="whatsapp-chip" href="https://wa.me/6597803795?text=I%20need%20to%20reset%20my%20password" target="_blank" rel="noopener">I need to reset my password</a>
+        <a class="whatsapp-chip" href="https://wa.me/6597803795?text=My%20laptop%20won%27t%20boot" target="_blank" rel="noopener">My laptop won't boot</a>
+        <a class="whatsapp-chip" href="https://wa.me/6597803795?text=How%20do%20I%20connect%20to%20the%20VPN%3F" target="_blank" rel="noopener">How do I connect to the VPN?</a>
+        <a class="whatsapp-chip" href="https://wa.me/6597803795?text=I%20received%20a%20suspicious%20email" target="_blank" rel="noopener">I received a suspicious email</a>
+      </div>
+      <a class="whatsapp-panel-cta" href="https://wa.me/6597803795" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C7.03 3 3 6.58 3 11c0 2.39 1.19 4.53 3.08 6.02L5 21l4.28-1.6A10.6 10.6 0 0 0 12 19c4.97 0 9-3.58 9-8s-4.03-8-9-8Z" fill="#08150C"/></svg>
+        Start a chat
+      </a>
+    </div>
+  </div>
+</div>
+
 <script>
   /* ============================================================
      MOBILE NAV TOGGLE
@@ -1413,6 +1606,48 @@
       form.hidden = false;
       fields.fullName.focus();
     });
+  })();
+
+  /* ============================================================
+     FLOATING WHATSAPP WIDGET — toggle, close on Escape/outside click
+  ============================================================ */
+  (function () {
+    var fab = document.getElementById('waFabToggle');
+    var panel = document.getElementById('waPanel');
+    var closeBtn = document.getElementById('waPanelClose');
+
+    function openPanel() {
+      panel.hidden = false;
+      requestAnimationFrame(function () { panel.classList.add('open'); });
+      fab.setAttribute('aria-expanded', 'true');
+      closeBtn.focus();
+      document.addEventListener('keydown', onKeydown);
+      document.addEventListener('click', onOutsideClick, true);
+    }
+
+    function closePanel() {
+      panel.classList.remove('open');
+      fab.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('keydown', onKeydown);
+      document.removeEventListener('click', onOutsideClick, true);
+      window.setTimeout(function () { panel.hidden = true; }, 200);
+      fab.focus();
+    }
+
+    function onKeydown(e) {
+      if (e.key === 'Escape') closePanel();
+    }
+
+    function onOutsideClick(e) {
+      if (!panel.contains(e.target) && e.target !== fab && !fab.contains(e.target)) closePanel();
+    }
+
+    fab.addEventListener('click', function () {
+      var isOpen = fab.getAttribute('aria-expanded') === 'true';
+      if (isOpen) closePanel(); else openPanel();
+    });
+
+    closeBtn.addEventListener('click', closePanel);
   })();
 </script>
 </body>
