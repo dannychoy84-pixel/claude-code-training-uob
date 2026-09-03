@@ -5,6 +5,10 @@ Training prompt.txt
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 
+# Real notification email/contact config for local agents — kept out of the
+# public repo; see .claude/agents/*.md for what reads this
+.claude/notify-config.json
+
 # OS/editor cruft
 .DS_Store
 Thumbs.db
